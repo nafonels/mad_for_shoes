@@ -8,7 +8,7 @@ from config import twitter_consumer_key, twitter_consumer_secret, \
     twitter_access_token, twitter_access_secret, data_path
 from twitter.oauth import oauth2_request
 from twitter.twitter_client import get_twitter_data
-from twitter.util import extract_fields, extract_field
+from twitter.util import extract_fields, extract_field, add_list
 
 
 def get_searched_tweet(client, search_query, count = 100, max_id = None):
@@ -122,7 +122,7 @@ def get_custom_comment(tweet: dict) -> dict:
     extract_spec = {
         'comment_text': ('text', str),
         'comment_date': ('created_at', str),
-        'comment_id': ('id_str', str)
+        'comment_id':   ('id_str', str)
     }
     custom_comment = {}
 
@@ -152,13 +152,13 @@ def get_custom_comment(tweet: dict) -> dict:
 
 
 def get_custom_media(tweet: dict) -> dict:
-    medias = extract_field(tweet, 'extended_entities:media', list)
+    list_media = extract_field(tweet, 'extended_entities:media', list)
     post_id = 'twi_' + tweet['id_str']
 
-    if not len(medias):
+    if not len(list_media):
         return None
     rets = []
-    for media in medias:
+    for media in list_media:
         extract_spec_media = {
             'file_url':  ('media_url', str),
             'video_url': ('video_info:variants', str),
@@ -166,7 +166,6 @@ def get_custom_media(tweet: dict) -> dict:
 
         custom_media = extract_fields(media, extract_spec_media)
         custom_media['post_id'] = post_id
-
         custom_media['video_url'] = custom_media['video_url'][-1]['url'] if custom_media['video_url'] else ''
         custom_media['file_path'] = parse.urlsplit(custom_media['file_url'])[2].split(r'/')[-1]
         custom_media['file_path'] = r'/'.join([custom_media['file_path'][:4], custom_media['file_path'][4:]])
@@ -177,8 +176,6 @@ def get_custom_media(tweet: dict) -> dict:
 
 
 def main_func(query, num_posts = 100):
-    jsonResult = []
-
     client = oauth2_request(twitter_consumer_key, twitter_consumer_secret,
                             twitter_access_token, twitter_access_secret)
 
@@ -193,7 +190,7 @@ def main_func(query, num_posts = 100):
 
     json_tweets = []
     json_comments = []
-    json_medias = []
+    json_media = []
 
     while 1:
         results = get_searched_tweet(client, query, num_posts, next_id)
@@ -210,9 +207,9 @@ def main_func(query, num_posts = 100):
 
         for tweet in tweets:
             # get_twitter_twit(tweet, jsonResult)
-            json_tweets.append(get_custom_post(tweet))
-            json_comments.append(get_custom_comment(tweet))
-            json_medias.append(get_custom_media(tweet))
+            add_list(json_tweets, get_custom_post(tweet))
+            add_list(json_comments, get_custom_comment(tweet))
+            add_list(json_media, get_custom_media(tweet))
 
         if i > 10:
             break
@@ -227,21 +224,21 @@ def main_func(query, num_posts = 100):
     file_name = f"{query}_twitter_post"
     with open(data_path + file_name + '.json', 'w', encoding = 'utf-8') as outfile:
         str_ = json.dumps(json_tweets,
-                          indent = 2, sort_keys = True,
+                          indent = 2,
                           ensure_ascii = False)
         outfile.write(str_)
 
     file_name = f"{query}_twitter_comment"
     with open(data_path + file_name + '.json', 'w', encoding = 'utf-8') as outfile:
         str_ = json.dumps(json_comments,
-                          indent = 2, sort_keys = True,
+                          indent = 2,
                           ensure_ascii = False)
         outfile.write(str_)
 
     file_name = f"{query}_twitter_media"
     with open(data_path + file_name + '.json', 'w', encoding = 'utf-8') as outfile:
-        str_ = json.dumps(json_medias,
-                          indent = 4, sort_keys = True,
+        str_ = json.dumps(json_media,
+                          indent = 4,
                           ensure_ascii = False)
         outfile.write(str_)
 

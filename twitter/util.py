@@ -1,9 +1,12 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+__author__ = 'Teoslard'
+__version__ = "$Revision$"
 
-def extract_fields(tweet, fields: dict, append_from = {}):
-    ret = append_from
+
+def extract_fields(tweet, fields: dict, append_from=None):
+    ret = {} if not append_from else append_from
     for key, json_key, default_type in ((x, *y) for x, y in fields.items()):
         ret[key] = extract_field(tweet, json_key, default_type)
 
@@ -17,3 +20,11 @@ def extract_field(tweet, json_key, default_type):
         if not json_value: break
 
     return json_value
+
+
+def add_list(to: list, data):
+    if data:
+        if isinstance(data, list):
+            to.extend(data)
+        else:
+            to.append(data)
