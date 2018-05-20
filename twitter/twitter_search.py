@@ -5,7 +5,8 @@ from urllib import parse
 from datetime import datetime, timedelta
 
 from config import twitter_consumer_key, twitter_consumer_secret, \
-    twitter_access_token, twitter_access_secret, data_path
+    twitter_access_token, twitter_access_secret
+from setting import data_path
 from twitter.oauth import oauth2_request
 from twitter.twitter_client import get_twitter_data
 from twitter.util import extract_fields, extract_field, add_list
