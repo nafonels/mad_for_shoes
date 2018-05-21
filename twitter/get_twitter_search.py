@@ -1,4 +1,5 @@
 import json
+from itertools import count
 from urllib import parse
 
 import oauth2
@@ -23,13 +24,13 @@ def oauth2_request(consumer_key, consumer_secret,
         return None
 
 
-def get_user_timeline(client, screen_name, count=50, include_rts=False):
+def get_user_timeline(client, search_query, count=50, max_id=None):
     base = "https://api.twitter.com/1.1/"
-    node = "statuses/user_timeline.json"
+    node = "search/tweets.json"
     field = {
-        'screen_name': screen_name,
+        'q': search_query,
         'count': count,
-        'include_rts': include_rts,
+        'max_id': max_id,
     }
 
     field = parse.urlencode(field)
@@ -109,23 +110,31 @@ def get_twitter_twit(tweet: dict, jsonResult):
 
 def main_func(screen_name, num_posts=50):
     jsonResult = []
-
+    next_id=None
+    cnt=count(1)
     client = oauth2_request(twitter_consumer_key, twitter_consumer_secret,
                             twitter_access_token, twitter_access_secret)
-    tweets = get_user_timeline(client, screen_name, num_posts)
-    print(tweets)
+    while 1:
+        tweets = get_user_timeline(client, screen_name, num_posts, next_id)
+        # print(tweets)
+        i=next(cnt)
+        with open('temp%d.json' %i, 'w') as fp:
+            fp.write(json.dumps(tweets, indent=4))
 
-    for tweet in tweets:
-        get_twitter_twit(tweet, jsonResult)
-
-    file_name = f"{screen_name}_twitter.json"
-    with open(file_name, 'w', encoding='utf-8') as outfile:
-        str_ = json.dumps(jsonResult,
-                          indent=4, sort_keys=True,
-                          ensure_ascii=False)
-        outfile.write(str_)
-
-    print('{} SAVED'.format(screen_name))
+        meta = tweets['search_metadata']
+        next_id = parse.parse_qs(meta['next_results'][1:])['max_id']
+        print(next_id)
+    # for tweet in tweets:
+    #     get_twitter_twit(tweet, jsonResult)
+    #
+    # file_name = f"{screen_name}_twitter.json"
+    # with open(file_name, 'w', encoding='utf-8') as outfile:
+    #     str_ = json.dumps(jsonResult,
+    #                       indent=4, sort_keys=True,
+    #                       ensure_ascii=False)
+    #     outfile.write(str_)
+    #
+    # print('{} SAVED'.format(screen_name))
 
 
 if __name__ == '__main__':
