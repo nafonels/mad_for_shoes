@@ -1,0 +1,23 @@
+앱 ID
+234145410464934
+
+앱 시크릿코드
+912e0c30f73b5f60664eb885d969d772
+
+신발 뭐 신지?
+https://www.facebook.com/shoeswhat/
+
+오늘의 신발
+https://www.facebook.com/todayshoesyam/
+
+신발덕후
+https://www.facebook.com/sinbaldukku/
+
+신발 저장소
+https://www.facebook.com/saveshoes/
+
+여자신발
+https://www.facebook.com/loveWshoes/
+
+페이지 선택 기준
+최근 한달이내로 게시물 기제, 좋아요 수 104만, 20만, 35만, 15만, 18만
