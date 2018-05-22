@@ -9,11 +9,11 @@ base = 'https://www.instagram.com/'
 
 def get_instagram_data(node_path: str, keyword: str, field: dict):
     field = parse.urlencode(field)
-    url = base + node_path + keyword + '?' + field
+    url = base + node_path + keyword + '/?' + field
 
     response = requests.get(url)
-    print(response.text)
-    print(response.status_code)
+    # print(response.text)
+    # print(response.status_code)
     try:
         if response.status_code == 200:
             ret = response.json()
