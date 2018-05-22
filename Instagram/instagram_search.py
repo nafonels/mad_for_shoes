@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
+from urllib import parse
 
 import requests
 
@@ -20,7 +21,7 @@ def search(keyword):
         next_cursor = paging['end_cursor']
     next_cursor
     # 얻은 endpoint로 접속
-    next_resp = get_serched_list(keyword, next_cursor)
+    next_resp = get_search_list(keyword, next_cursor)
     next_resp
     # json 데이터 출력
     resp_json = next_resp.json()
@@ -36,9 +37,7 @@ def search(keyword):
         next_cursor
 
         # 얻은 endpoint로 접속
-        next_url = 'https://www.instagram.com/explore/tags/%s/?__a=1&max_id=%s' % (
-            keyword, next_cursor)
-        next_resp = requests.get(next_url)
+        next_resp = get_search_list(keyword, next_cursor)
         next_resp
 
         # json 데이터 출력
@@ -52,10 +51,30 @@ def search(keyword):
         if i > 10: break
 
 
-def get_serched_list(keyword, next_cursor):
-    next_url = 'https://www.instagram.com/explore/tags/%s/?__a=1&max_id=%s' % (keyword, next_cursor)
-    next_resp = requests.get(next_url)
+def get_search_list(keyword, next_cursor):
+    node_path = 'explore/tags/'
+    field = {
+        '__a':    1,
+        'max_id': next_cursor
+    }
+
+    next_resp = get_instagram_data(node_path, keyword, field)
     return next_resp
+
+
+def get_instagram_data(node_path, keyword, field):
+    base = 'https://www.instagram.com/'
+    field = parse.urlencode(field)
+    url = base + node_path + keyword + '?' + field
+
+    response = requests.get(url)
+    try:
+        if response.status_code == '200':
+            ret = response.json()
+            return ret
+    except Exception as e:
+        print("ERR:", e)
+        return None
 
 
 if __name__ == '__main__':
