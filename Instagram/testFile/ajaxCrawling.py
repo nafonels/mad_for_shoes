@@ -25,7 +25,6 @@ print(j['id'])
 
 # url = 'https://www.instagram.com/static/bundles/base/TagPageContainer.js/8551280fb8d9.js'
 
-
 # url = "https://www.instagram.com/static/bundles/base/TagPageContainer.js/8551280fb8d9.js"+"?format=json"
 # data = requests.get(url)
 # print(data)

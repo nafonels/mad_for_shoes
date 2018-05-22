@@ -1,6 +1,6 @@
 
 import requests
-from Instagram.Create_Instagram_page import get_post
+from Instagram.testFile.Create_Instagram_page import get_post
 
 # keyword 및 target url 설정
 keyword = '신발'
