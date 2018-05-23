@@ -43,10 +43,12 @@ while i <= 10 :
     json_edges = resp_json['graphql']['hashtag']['edge_hashtag_to_media'][
         'edges']
     for edge in json_edges:
-        shortcode = edge['node']['shortcode']
-        # print(shortcode)
-        print(get_post(shortcode))
-
+        picture = edge['node']['display_url']
+        print('img:' + picture)
+        likeCnt = edge['node']['edge_liked_by']
+        print('likeCnt:' + str(likeCnt))
+        commentCnt = edge['node']['edge_media_to_comment']
+        print('commentCnt' + str(commentCnt))
 
     # 얻은 endpoint로 접속
     next_url = 'https://www.instagram.com/explore/tags/%s/?__a=1&max_id=%s' % (
