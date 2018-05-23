@@ -31,14 +31,15 @@ if __name__ == '__main__':
         except:
             raise
 
-    print(querys)
-
     if args.next_id:
         try:
             logger.info('using next_id preservation.')
             with open(args.next_id, 'r', encoding = 'utf-8') as nf:
                 next_id = {k.strip(): v.strip() for s in nf.readlines() for k, v in (s.split('='),)}
                 print(next_id)
+
+        except FileNotFoundError:
+            logger.warn('next_id file not found.')
 
         except:
             raise

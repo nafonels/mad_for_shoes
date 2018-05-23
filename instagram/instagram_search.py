@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from datetime import datetime
 from itertools import count
 
 from instagram.instagram_client import get_instagram_data
@@ -9,9 +10,11 @@ from util.iofunc import save_json
 from util.logger import logger
 
 
-def search_query(query, next_cursor = None):
+def search_query(query, next_cursor = None, date_to = '2018/05/01'):
     c = count(1)
     is_break = False
+
+    next_cursor = next_cursor
 
     while 1:
         try:
@@ -32,15 +35,16 @@ def search_query(query, next_cursor = None):
             if page_info['has_next_page']:
                 next_cursor = page_info['end_cursor']
 
-            # print json
-            # print(results)
 
             save_json('insta', query, 'list', results, i, next_cursor, True)
 
             page_edges = edge_hashtag['edges']
-            # print(page_edges)
-            # get_post_shortcode
+
             for node in (x['node'] for x in page_edges):
+                timestamp = node['taken_at_timestamp']
+                if timestamp < datetime.strptime(date_to, '%Y/%m/%d').timestamp():
+                    logger.info('we crawled enough data')
+                    is_break = True
                 data = get_post(node['shortcode'])
                 add_list(json_post, data[0])
                 add_list(json_comments, data[1])
