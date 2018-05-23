@@ -6,10 +6,11 @@ from datetime import datetime, timedelta
 
 from config import twitter_consumer_key, twitter_consumer_secret, \
     twitter_access_token, twitter_access_secret
+from util.logger import logger
 from setting import data_path
 from twitter.oauth import oauth2_request
 from twitter.twitter_client import get_twitter_data
-from twitter.util import extract_fields, extract_field, add_list
+from util.data import extract_fields, extract_field, add_list
 
 
 def get_searched_tweet(client, search_query, count = 100, max_id = None):
@@ -176,7 +177,7 @@ def get_custom_media(tweet: dict) -> dict:
     return rets
 
 
-def main_func(query, num_posts = 100):
+def search_query(query, num_posts = 100, next_id = None):
     client = oauth2_request(twitter_consumer_key, twitter_consumer_secret,
                             twitter_access_token, twitter_access_secret)
 
@@ -184,36 +185,42 @@ def main_func(query, num_posts = 100):
     # print(type(tweets))
     # print(tweets)
 
-    next_id = None
-    c = count(1)
 
-    print(get_rate_limit(client, ['search']))
+    c = count(1)
+    logger.debug('get api rate limit')
+    limit_result = get_rate_limit(client, ['search'])
+    api_limit = extract_field(limit_result, 'resources:search:/search/tweets', dict)
+
+    logger.info('api limit - {remaining}/{limit} (reset to {reset})'.format_map(api_limit))
 
     json_tweets = []
     json_comments = []
     json_media = []
 
     while 1:
-        results = get_searched_tweet(client, query, num_posts, next_id)
-        # print(type(results))
-        # print(results)
-        tweets = results['statuses']
-        meta = results['search_metadata']
-
         i = next(c)
+
+        logger.info(f'get {num_posts} tweets <page {i:04d} - next id : {next_id}> : {query}')
+        results = get_searched_tweet(client, query, num_posts, next_id)
+        try:
+            tweets = results['statuses']
+            meta = results['search_metadata']
+            next_id = parse.parse_qs(meta['next_results'][1:])['max_id'][0]
+
+        except Exception:
+            logger.error('cannot crawl tweet data.')
+            logger.critical(f'you can try with next_id : {next_id}')
+            break
+
         with open(data_path + 'raw/' + f'temp{i}.json', 'w', encoding = 'utf-8') as ofp:
             ofp.write(json.dumps(tweets,
                                  indent = 4))
-        next_id = parse.parse_qs(meta['next_results'][1:])
 
         for tweet in tweets:
             # get_twitter_twit(tweet, jsonResult)
             add_list(json_tweets, get_custom_post(tweet))
             add_list(json_comments, get_custom_comment(tweet))
             add_list(json_media, get_custom_media(tweet))
-
-        if i > 10:
-            break
 
     # file_name = f"{query}_twitter"
     # with open(file_name + '.json', 'w', encoding = 'utf-8') as outfile:
@@ -222,6 +229,7 @@ def main_func(query, num_posts = 100):
     #                       ensure_ascii = False)
     #     outfile.write(str_)
 
+    logger.info('save scrap data')
     file_name = f"{query}_twitter_post"
     with open(data_path + file_name + '.json', 'w', encoding = 'utf-8') as outfile:
         str_ = json.dumps(json_tweets,
@@ -243,8 +251,10 @@ def main_func(query, num_posts = 100):
                           ensure_ascii = False)
         outfile.write(str_)
 
-    print('{} SAVED'.format(query))
+    logger.info('search "{}" SAVED'.format(query))
+
+    return next_id
 
 
 if __name__ == '__main__':
-    main_func('신발')
+    search_query('신발')
