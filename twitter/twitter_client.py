@@ -13,7 +13,7 @@ def get_twitter_data(client, node: str, field: dict):
     url = base + node + '?' + encoded_field
 
     logger.info(f'request to "{url}"')
-    logger.debug(f'request info : <base : "{base}"> <node: {node}> < encoded_field: {field}>')
+    logger.debug(f'request info : <base : "{base}"> <node: {node}> <encoded_field: {field}>')
 
     response, data = client.request(url)  # type : dict, bytes
     logger.debug(f'response status : {response["status"]}')

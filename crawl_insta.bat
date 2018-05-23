@@ -1,0 +1,1 @@
+python instagram_crawl.py --query_file=search_query.txt --next_id=instagram_end_cursor.cfg

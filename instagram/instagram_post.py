@@ -4,6 +4,7 @@ from urllib import parse
 
 from instagram.instagram_client import get_instagram_data
 from util.data import extract_field, extract_fields
+from util.logger import logger
 
 
 def get_post_page(shortcode):
@@ -11,7 +12,7 @@ def get_post_page(shortcode):
     field = {
         '__a': 1,
     }
-
+    logger.info(f'get {shortcode} post')
     return get_instagram_data(node_path, shortcode, field)
 
 

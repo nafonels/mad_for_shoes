@@ -3,6 +3,7 @@
 import json
 
 from setting import data_path
+from util.logger import logger
 
 
 def save_json(platform: str, query: str, category: str, data: dict,
@@ -21,7 +22,7 @@ def save_json(platform: str, query: str, category: str, data: dict,
     filename = '/'.join([data_path,
                          'raw' if is_raw else '',
                          filename])
-
+    logger.info(f'save {filename}')
     with open(filename + '.json', 'w', encoding = 'utf-8') as outfile:
         str_ = json.dumps(data,
                           indent = 2,
