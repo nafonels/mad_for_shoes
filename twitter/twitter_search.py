@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 
 from config import twitter_consumer_key, twitter_consumer_secret, \
     twitter_access_token, twitter_access_secret
+from util.iofunc import save_json
 from util.logger import logger
 from setting import data_path
 from twitter.oauth import oauth2_request
@@ -212,9 +213,7 @@ def search_query(query, num_posts = 100, next_id = None):
             logger.critical(f'you can try with next_id : {next_id}')
             break
 
-        with open(data_path + 'raw/' + f'temp{i}.json', 'w', encoding = 'utf-8') as ofp:
-            ofp.write(json.dumps(tweets,
-                                 indent = 4))
+        save_json('twit', query, 'list', tweets, next_id, i, True)
 
         for tweet in tweets:
             # get_twitter_twit(tweet, jsonResult)
@@ -222,34 +221,11 @@ def search_query(query, num_posts = 100, next_id = None):
             add_list(json_comments, get_custom_comment(tweet))
             add_list(json_media, get_custom_media(tweet))
 
-    # file_name = f"{query}_twitter"
-    # with open(file_name + '.json', 'w', encoding = 'utf-8') as outfile:
-    #     str_ = json.dumps(jsonResult,
-    #                       indent = 4, sort_keys = True,
-    #                       ensure_ascii = False)
-    #     outfile.write(str_)
-
     logger.info('save scrap data')
-    file_name = f"{query}_twitter_post"
-    with open(data_path + file_name + '.json', 'w', encoding = 'utf-8') as outfile:
-        str_ = json.dumps(json_tweets,
-                          indent = 2,
-                          ensure_ascii = False)
-        outfile.write(str_)
 
-    file_name = f"{query}_twitter_comment"
-    with open(data_path + file_name + '.json', 'w', encoding = 'utf-8') as outfile:
-        str_ = json.dumps(json_comments,
-                          indent = 2,
-                          ensure_ascii = False)
-        outfile.write(str_)
-
-    file_name = f"{query}_twitter_media"
-    with open(data_path + file_name + '.json', 'w', encoding = 'utf-8') as outfile:
-        str_ = json.dumps(json_media,
-                          indent = 4,
-                          ensure_ascii = False)
-        outfile.write(str_)
+    save_json('twit', query, 'post', json_tweets, next_id, i)
+    save_json('twit', query, 'comment', json_comments, next_id, i)
+    save_json('twit', query, 'media', json_media, next_id, i)
 
     logger.info('search "{}" SAVED'.format(query))
 

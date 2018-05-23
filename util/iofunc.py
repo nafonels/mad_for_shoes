@@ -5,12 +5,15 @@ import json
 from setting import data_path
 
 
-def save_json(platform: str, query: str, category: str, data: dict, page = None, is_raw = False):
+def save_json(platform: str, query: str, category: str, data: dict,
+              page_id = None, page = None, is_raw = False):
     names = [
         query,
         platform,
         category,
     ]
+    if page_id:
+        names.append(str(page_id))
     if page:
         names.append(str(page))
 

@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     if querys:
         for query in querys:
-            next_id[query] = search_query(query, next_id.get(query, None))
+            next_id[query] = search_query(query, next_id = next_id.get(query, None))
 
         if args.next_id:
             try:
