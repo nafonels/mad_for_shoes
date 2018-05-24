@@ -1,57 +1,77 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from datetime import datetime
 from itertools import count
 
 from instagram.instagram_client import get_instagram_data
 from instagram.instagram_post import get_post_page, get_custom_comment, get_custom_post, get_custom_media
 from util.data import add_list
 from util.iofunc import save_json
+from util.logger import logger
 
 
-def search(query, page_break = 10):
-    next_cursor = None
+def search_query(query, next_cursor = None, date_to = '2018/05/01'):
     c = count(1)
+    is_break = False
+
+    next_cursor = next_cursor
 
     while 1:
-        i = next(c)
-        print(i)
-        json_post = []
-        json_comments = []
-        json_media = []
+        try:
+            i = next(c)
+            logger.info(f'get posts <page {i:04d} - next_cursor : {next_cursor}> : {query}')
 
-        # get json w/t endpoint
-        results = get_search_list(query, next_cursor)
-        if i > page_break: break
+            json_post = []
+            json_comments = []
+            json_media = []
 
-        # next_endpoint 획득
+            # get json w/t endpoint
+            results = get_search_list(query, next_cursor)
 
-        edge_hashtag = results['graphql']['hashtag']['edge_hashtag_to_media']
-        page_info = edge_hashtag['page_info']
-        if page_info['has_next_page']:
-            next_cursor = page_info['end_cursor']
+            # next_endpoint 획득
 
-        # print json
-        # print(results)
+            edge_hashtag = results['graphql']['hashtag']['edge_hashtag_to_media']
+            page_info = edge_hashtag['page_info']
+            if page_info['has_next_page']:
+                next_cursor = page_info['end_cursor']
 
-        save_json('insta', query, 'list', results, i, True)
 
-        page_edges = edge_hashtag['edges']
-        # print(page_edges)
-        # get_post_shortcode
-        for node in (x['node'] for x in page_edges):
-            data = get_post(node['shortcode'])
-            add_list(json_post, data[0])
-            add_list(json_comments, data[1])
-            add_list(json_media, data[2])
+            save_json('insta', query, 'list', results, i, next_cursor, True)
 
-        # print(json_post)
-        # print(json_comments)
-        # print(json_media)
-        save_json('insta', query, 'post', json_post, i)
-        save_json('insta', query, 'comment', json_comments, i)
-        save_json('insta', query, 'media', json_media, i)
+            page_edges = edge_hashtag['edges']
 
-    print(f'{query} SAVED')
+            for node in (x['node'] for x in page_edges):
+                timestamp = node['taken_at_timestamp']
+                if timestamp < datetime.strptime(date_to, '%Y/%m/%d').timestamp():
+                    logger.info('we crawled enough data')
+                    is_break = True
+                data = get_post(node['shortcode'])
+                add_list(json_post, data[0])
+                add_list(json_comments, data[1])
+                add_list(json_media, data[2])
+
+        except KeyboardInterrupt:
+            is_break = True
+
+        except Exception as e:
+            logger.error('cannot crawl tweet data.')
+            logger.critical(f'you can try with next_cursor : {next_cursor}')
+            print(e)
+            break
+
+        logger.info('save scrap data')
+
+        save_json('insta', query, 'post', json_post, next_cursor, i)
+        save_json('insta', query, 'comment', json_comments, next_cursor, i)
+        save_json('insta', query, 'media', json_media, next_cursor, i)
+
+        if is_break:
+            logger.debug('loop break')
+            break
+
+    logger.info('search "{}" SAVED'.format(query))
+
+    return next_cursor
 
 
 def get_post(shortcode):
@@ -76,4 +96,4 @@ def get_search_list(keyword, next_cursor = None):
 
 if __name__ == '__main__':
     keyword = '신발'
-    search(keyword)
+    search_query(keyword)
