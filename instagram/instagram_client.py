@@ -11,7 +11,7 @@ base = 'https://www.instagram.com/'
 
 
 def get_instagram_data(node_path: str, keyword: str, field: dict):
-    for k, v in field.items():
+    for k, v in dict(field).items():
         if not v:
             field.pop(k)
 

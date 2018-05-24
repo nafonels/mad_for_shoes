@@ -9,6 +9,10 @@ base = "https://api.twitter.com/1.1/"
 
 
 def get_twitter_data(client, node: str, field: dict):
+    for k, v in dict(field).items():
+        if not v:
+            field.pop(k)
+
     encoded_field = parse.urlencode(field)
     url = base + node + '?' + encoded_field
 
