@@ -13,6 +13,8 @@ from util.logger import logger
 def search_query(query, next_cursor = None, date_to = '2018/05/01'):
     c = count(1)
     is_break = False
+    is_date_break = False
+    is_final = False
 
     next_cursor = next_cursor
 
@@ -28,12 +30,12 @@ def search_query(query, next_cursor = None, date_to = '2018/05/01'):
             # get json w/t endpoint
             results = get_search_list(query, next_cursor)
 
+            if not next_cursor:
+                next_cursor = 'first'
             # next_endpoint 획득
 
             edge_hashtag = results['graphql']['hashtag']['edge_hashtag_to_media']
             page_info = edge_hashtag['page_info']
-            if page_info['has_next_page']:
-                next_cursor = page_info['end_cursor']
 
 
             save_json('insta', query, 'list', results, i, next_cursor, True)
@@ -45,6 +47,7 @@ def search_query(query, next_cursor = None, date_to = '2018/05/01'):
                 if timestamp < datetime.strptime(date_to, '%Y/%m/%d').timestamp():
                     logger.info('we crawled enough data')
                     is_break = True
+                    is_date_break = True
                 data = get_post(node['shortcode'])
                 add_list(json_post, data[0])
                 add_list(json_comments, data[1])
@@ -59,18 +62,34 @@ def search_query(query, next_cursor = None, date_to = '2018/05/01'):
             print(e)
             break
 
+
         logger.info('save scrap data')
 
         save_json('insta', query, 'post', json_post, next_cursor, i)
         save_json('insta', query, 'comment', json_comments, next_cursor, i)
         save_json('insta', query, 'media', json_media, next_cursor, i)
 
+        if page_info['has_next_page']:
+            next_cursor = page_info['end_cursor']
+        else:
+            is_final = True
+
+        if is_final:
+            logger.info('final page_crawled')
+            next_cursor = None
+            break
+
         if is_break:
             logger.debug('loop break')
             break
 
+    if is_date_break:
+        logger.debug('enough data crawled. <date : %s ~ >' % date_to
+
     logger.info('search "{}" SAVED'.format(query))
 
+    if next_cursor = 'first':
+        next_cursor = None
     return next_cursor
 
 
