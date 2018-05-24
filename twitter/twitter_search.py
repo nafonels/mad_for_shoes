@@ -136,6 +136,8 @@ def search_query(query, num_posts = 100, next_id = None):
 
     logger.info('api limit - {remaining}/{limit} (reset to {reset})'.format_map(api_limit))
 
+    is_final = False
+
     while 1:
         i = next(c)
 
@@ -145,10 +147,12 @@ def search_query(query, num_posts = 100, next_id = None):
 
         logger.info(f'get {num_posts} tweets <page {i:04d} - next id : {next_id}> : {query}')
         results = get_searched_tweet(client, query, num_posts, next_id)
+
+        if not next_id:
+            next_id = 'first'
         try:
             tweets = results['statuses']
             meta = results['search_metadata']
-            next_id = parse.parse_qs(meta['next_results'][1:])['max_id'][0]
 
         except Exception:
             logger.error('cannot crawl tweet data.')
@@ -169,8 +173,21 @@ def search_query(query, num_posts = 100, next_id = None):
         save_json('twit', query, 'comment', json_comments, next_id, i)
         save_json('twit', query, 'media', json_media, next_id, i)
 
+        next_results = meta.get('next_results', None)
+        if next_results:
+            next_id = parse.parse_qs(next_results[1:])['max_id'][0]
+        else:
+            is_final = True
+
+        if is_final:
+            logger.info('final page crawled')
+            next_id = None
+            break
+
     logger.info('search "{}" SAVED'.format(query))
 
+    if next_id == 'first':
+        next_id = None
     return next_id
 
 
