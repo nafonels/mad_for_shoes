@@ -84,11 +84,11 @@ def search_query(query, next_cursor = None, date_to = '2018/05/01'):
             break
 
     if is_date_break:
-        logger.debug('enough data crawled. <date : %s ~ >' % date_to
+        logger.debug('enough data crawled. <date : %s ~ >' % date_to)
 
     logger.info('search "{}" SAVED'.format(query))
 
-    if next_cursor = 'first':
+    if next_cursor == 'first':
         next_cursor = None
     return next_cursor
 
