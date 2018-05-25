@@ -2,6 +2,9 @@ from bs4 import BeautifulSoup
 import requests
 import urllib.request as req
 import datetime
+import json
+import sys
+import urllib.request
 from itertools import count
 from collections import OrderedDict
 from urllib import parse
@@ -82,6 +85,8 @@ for page in count(1,1):#count(1,1):
         except:
             print('포스트가 삭제되었습니다.')
             continue
+        
+    
     #     res = req.urlopen(url)
         soup = BeautifulSoup(html, 'html.parser')
     #     soup = BeautifulSoup(res, 'html.parser')
@@ -106,9 +111,9 @@ for page in count(1,1):#count(1,1):
         print(text)
         dictionary.append(text)
         
-    with open('disruptor2.json', 'w', encoding = 'utf8')as outfile:
-        str_ = json.dumps(jsonResult, indent=4, sort_keys=True, ensure_ascii=False)
-print('disruptor2.json SAVED')
+        with open('disruptor2.json', 'w', encoding = 'utf8')as outfile:
+            str_ = json.dumps(jsonResult, indent=4, sort_keys=True, ensure_ascii=False)
+        print('disruptor2.json SAVED')
 
 
     #     wd.get("{:}".format(url1))
