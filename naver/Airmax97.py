@@ -50,6 +50,7 @@ hrd = {"User-Agent": "Mozillg/5.0" , "referer" : "http://naver.com"}
 post_dict = OrderedDict()
 cnt = 1
 dictionary = []
+jsonResult = []
 wd = webdriver.Chrome('C:/chromedriver_win32/chromedriver.exe')
 for page in count(1,1):#count(1,1):
     param = {
@@ -109,8 +110,9 @@ for page in count(1,1):#count(1,1):
         dictionary.append(text)        
 
           
-
-print('blog.json SAVED')
+    with open('Airmax97.json', 'w', encoding = 'utf8')as outfile:
+        str_ = json.dumps(jsonResult, indent=4, sort_keys=True, ensure_ascii=False)
+print('Airmax97.json SAVED')
 
            
     #     wd.get("{:}".format(url1))
