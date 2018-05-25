@@ -2,10 +2,18 @@ from bs4 import BeautifulSoup
 import requests
 import urllib.request as req
 import datetime
+import json
+import matplotlib.pyplot as plt
+import matplotlib
+import pytagcloud
+import webbrowser
+from matplotlib import font_manager, rc
 from itertools import count
 from collections import OrderedDict
 from selenium import webdriver
 from urllib import parse
+from konlpy.tag import Twitter
+from collections import Counter
 import re
 
 search_url="https://search.naver.com/search.naver"
