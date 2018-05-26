@@ -1,0 +1,4 @@
+selenium
+requests
+oauth2
+beautifulsoup4
