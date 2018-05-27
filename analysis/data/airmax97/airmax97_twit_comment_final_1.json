@@ -1,0 +1,275 @@
+[
+  {
+    "type": "reply",
+    "metadata": "",
+    "comment_text": "51. 나이키 에어맥스 97 베얼리 로즈. 오직 색상 때문에 갖고 싶음... https://t.co/rc0CB3564r",
+    "comment_date": "Tue May 22 04:47:18 +0000 2018",
+    "comment_id": "twi_998787362174861312",
+    "post_id": "twi_998439050418647040"
+  },
+  {
+    "type": "reply",
+    "metadata": "",
+    "comment_text": "@rlgusdk_S2 아니요.. 나이키 에어맥스 97..에서 구칠을 따온..",
+    "comment_date": "Mon May 21 10:33:09 +0000 2018",
+    "comment_id": "twi_998512012048064512",
+    "post_id": "twi_998511687094358016"
+  },
+  {
+    "type": "reply",
+    "metadata": "",
+    "comment_text": "@OlO_l992_O6l8 네.. 나이키에어맥스97 줄여서 구칠이..",
+    "comment_date": "Mon May 21 04:05:24 +0000 2018",
+    "comment_id": "twi_998414431464771585",
+    "post_id": "twi_998413121541701632"
+  },
+  {
+    "type": "reply",
+    "metadata": "",
+    "comment_text": "@RnRnd_0 이름ㅋㅋㅋㅋㅋㅋㅋㅋ나이킼ㅋㅋㅋ에어맥스97ㅋㅋㅋㅋㅋㅋㅋ 충격적인 네이밍 센스..",
+    "comment_date": "Sun May 20 13:44:29 +0000 2018",
+    "comment_id": "twi_998197774762967041",
+    "post_id": "twi_998197657737691137"
+  },
+  {
+    "type": "retweet",
+    "comment_text": "RT @Gfriend_Style: 쎄시 예린\n#여자친구 #GFRIEND #예린\n[나이키] 나이키 에어맥스 97\n\n지금은 품절 ☹️ https://t.co/AgNVFcnfqS",
+    "comment_date": "Sat May 19 23:04:22 +0000 2018",
+    "comment_id": "twi_997976283354025984",
+    "post_id": "twi_987303320732647424",
+    "metadata": {
+      "created_at": "Fri Apr 20 12:13:49 +0000 2018",
+      "id": 987303320732647424,
+      "id_str": "987303320732647424",
+      "text": "쎄시 예린\n#여자친구 #GFRIEND #예린\n[나이키] 나이키 에어맥스 97\n\n지금은 품절 ☹️ https://t.co/AgNVFcnfqS",
+      "truncated": false,
+      "entities": {
+        "hashtags": [
+          {
+            "text": "여자친구",
+            "indices": [
+              6,
+              11
+            ]
+          },
+          {
+            "text": "GFRIEND",
+            "indices": [
+              12,
+              20
+            ]
+          },
+          {
+            "text": "예린",
+            "indices": [
+              21,
+              24
+            ]
+          }
+        ],
+        "symbols": [],
+        "user_mentions": [],
+        "urls": [],
+        "media": [
+          {
+            "id": 987303285164933121,
+            "id_str": "987303285164933121",
+            "indices": [
+              54,
+              77
+            ],
+            "media_url": "http://pbs.twimg.com/media/DbObG13VAAEnJda.jpg",
+            "media_url_https": "https://pbs.twimg.com/media/DbObG13VAAEnJda.jpg",
+            "url": "https://t.co/AgNVFcnfqS",
+            "display_url": "pic.twitter.com/AgNVFcnfqS",
+            "expanded_url": "https://twitter.com/Gfriend_Style/status/987303320732647424/photo/1",
+            "type": "photo",
+            "sizes": {
+              "small": {
+                "w": 503,
+                "h": 680,
+                "resize": "fit"
+              },
+              "thumb": {
+                "w": 150,
+                "h": 150,
+                "resize": "crop"
+              },
+              "large": {
+                "w": 1515,
+                "h": 2048,
+                "resize": "fit"
+              },
+              "medium": {
+                "w": 888,
+                "h": 1200,
+                "resize": "fit"
+              }
+            }
+          }
+        ]
+      },
+      "extended_entities": {
+        "media": [
+          {
+            "id": 987303285164933121,
+            "id_str": "987303285164933121",
+            "indices": [
+              54,
+              77
+            ],
+            "media_url": "http://pbs.twimg.com/media/DbObG13VAAEnJda.jpg",
+            "media_url_https": "https://pbs.twimg.com/media/DbObG13VAAEnJda.jpg",
+            "url": "https://t.co/AgNVFcnfqS",
+            "display_url": "pic.twitter.com/AgNVFcnfqS",
+            "expanded_url": "https://twitter.com/Gfriend_Style/status/987303320732647424/photo/1",
+            "type": "photo",
+            "sizes": {
+              "small": {
+                "w": 503,
+                "h": 680,
+                "resize": "fit"
+              },
+              "thumb": {
+                "w": 150,
+                "h": 150,
+                "resize": "crop"
+              },
+              "large": {
+                "w": 1515,
+                "h": 2048,
+                "resize": "fit"
+              },
+              "medium": {
+                "w": 888,
+                "h": 1200,
+                "resize": "fit"
+              }
+            }
+          },
+          {
+            "id": 987303285341040640,
+            "id_str": "987303285341040640",
+            "indices": [
+              54,
+              77
+            ],
+            "media_url": "http://pbs.twimg.com/media/DbObG2hUMAA_5Xq.jpg",
+            "media_url_https": "https://pbs.twimg.com/media/DbObG2hUMAA_5Xq.jpg",
+            "url": "https://t.co/AgNVFcnfqS",
+            "display_url": "pic.twitter.com/AgNVFcnfqS",
+            "expanded_url": "https://twitter.com/Gfriend_Style/status/987303320732647424/photo/1",
+            "type": "photo",
+            "sizes": {
+              "thumb": {
+                "w": 150,
+                "h": 150,
+                "resize": "crop"
+              },
+              "large": {
+                "w": 641,
+                "h": 569,
+                "resize": "fit"
+              },
+              "medium": {
+                "w": 641,
+                "h": 569,
+                "resize": "fit"
+              },
+              "small": {
+                "w": 641,
+                "h": 569,
+                "resize": "fit"
+              }
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "result_type": "recent",
+        "iso_language_code": "ko"
+      },
+      "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "in_reply_to_screen_name": null,
+      "user": {
+        "id": 760437836147372034,
+        "id_str": "760437836147372034",
+        "name": "여자친구 패션",
+        "screen_name": "Gfriend_Style",
+        "location": "",
+        "description": "",
+        "url": null,
+        "entities": {
+          "description": {
+            "urls": []
+          }
+        },
+        "protected": false,
+        "followers_count": 6745,
+        "friends_count": 2,
+        "listed_count": 58,
+        "created_at": "Tue Aug 02 11:31:23 +0000 2016",
+        "favourites_count": 20,
+        "utc_offset": null,
+        "time_zone": null,
+        "geo_enabled": false,
+        "verified": false,
+        "statuses_count": 632,
+        "lang": "ko",
+        "contributors_enabled": false,
+        "is_translator": false,
+        "is_translation_enabled": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_image_url": "http://pbs.twimg.com/profile_images/909027168537022464/dS12Vx-4_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/909027168537022464/dS12Vx-4_normal.jpg",
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/760437836147372034/1523806267",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "has_extended_profile": false,
+        "default_profile": true,
+        "default_profile_image": false,
+        "following": false,
+        "follow_request_sent": false,
+        "notifications": false,
+        "translator_type": "none"
+      },
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "is_quote_status": false,
+      "retweet_count": 32,
+      "favorite_count": 57,
+      "favorited": false,
+      "retweeted": false,
+      "possibly_sensitive": false,
+      "lang": "ko"
+    }
+  },
+  {
+    "type": "reply",
+    "metadata": "",
+    "comment_text": "@baekhyun_ee77 넹 원래 사려구 20만원 현금 더 뽑아왔눈데 에어맥스 97은 다 사이즈 없어서 울고이써요ㅠㅠ",
+    "comment_date": "Fri May 18 04:44:06 +0000 2018",
+    "comment_id": "twi_997337005116669953",
+    "post_id": "twi_997322958166097921"
+  },
+  {
+    "type": "reply",
+    "metadata": "",
+    "comment_text": "@letzz_love 하지만 끝까지 에어맥스 98 97은 우먼스 사이즈가 없어꾸,,,직원이 한국에서 구할수있다고 그래서 월급들어오면 다시 하나 더 사는걸로,,,,",
+    "comment_date": "Fri May 18 02:22:55 +0000 2018",
+    "comment_id": "twi_997301476010553345",
+    "post_id": "twi_997301183600508928"
+  }
+]
