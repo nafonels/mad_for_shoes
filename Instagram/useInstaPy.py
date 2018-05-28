@@ -1,3 +1,24 @@
+import InstaPy
+
+# [ 아이디와 비번으로 로그인 -> 항목별 크롤링 ]
+InstaPy(username='test', password='test')\
+  .login()\
+  .set_do_comment(True, percentage=10)\
+  .set_comments(['Cool!', 'Awesome!', 'Nice!'])\
+  .set_dont_include(['friend1', 'friend2', 'friend3'])\
+  .set_dont_like(['food', 'girl', 'hot'])\
+  .set_ignore_if_contains(['pizza'])\
+  .like_by_tags(['dog', '#cat'], amount=100)\
+  .end()
+
+
+
+
+
+
+
+
+
 # ModuleNotFoundError: No module named 'clarifai' 오류로 막힘
 
 #if you don't provide arguments, the script will look for INSTA_USER and INSTA_PW in the environment

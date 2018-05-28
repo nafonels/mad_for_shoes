@@ -6,18 +6,28 @@ from selenium.webdriver.common.keys import Keys
 
 # [ selenium 검색 ]
 browser = webdriver.Chrome("C:/Python36/WebDriver/chromedriver.exe")
-
 browser.get("https://www.instagram.com/explore/tags/%s/" % ("레깅스"))
 time.sleep(1)
 
-elem = browser.find_element_by_tag_name("body")  # body 부분의 Element 가져오기
+# [ body 부분의 Element 가져오기 ]
+elem = browser.find_element_by_tag_name("body")
 
+# [ 스크롤 내리기 (방법1) ]
+i = 0
+while i < 8: #스크롤 횟수 설정
+    i = i+1
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(1)
+
+# [ 스크롤 내리기 (방법2) ]
 no_of_pagedowns = 10  # 스크롤 횟수 설정
-
 while no_of_pagedowns:
     elem.send_keys(Keys.PAGE_DOWN)
     time.sleep(0.2)
     no_of_pagedowns -= 1
+
+# [ Network 데이터를 못받아 올 경우 f5 누르기 ]
+driver.refresh()
 
 # [ script 부분의 window._sharedData 가져오기 ]
 provider_elems = elem.find_elements_by_tag_name("script")

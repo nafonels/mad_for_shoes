@@ -8,15 +8,22 @@ import time
 driver = webdriver.Chrome("C:/Python36/WebDriver/chromedriver.exe")
 driver.get("https://www.instagram.com/explore/tags/%s/" %("신발"))
 
-# [ 스크롤 내리기 ]
+# [ 스크롤 내리기 (방법1) ]
 i = 0
-while i < 8:
+while i < 8: #스크롤 횟수 설정
     i = i+1
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(1)
 
-# [ f5 누르기]
-# driver.refresh()
+# [ 스크롤 내리기 (방법2) ]
+no_of_pagedowns = 10  # 스크롤 횟수 설정
+while no_of_pagedowns:
+    elem.send_keys(Keys.PAGE_DOWN)
+    time.sleep(0.2)
+    no_of_pagedowns -= 1
+
+# [ Network 데이터를 못받아 올 경우 f5 누르기]
+driver.refresh()
 
 
 
