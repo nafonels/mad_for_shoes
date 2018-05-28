@@ -53,7 +53,8 @@ if __name__ == '__main__':
                 logger.info('save next_id for session save.')
                 with open(args.next_id, 'w', encoding = 'utf-8') as nf:
                     for k, v in next_id.items():
-                        nf.write(f'{k}={v}\n')
+                        if v:
+                            nf.write(f'{k}={v}\n')
 
             except:
                 logger.error('critial error : cannnot save next_id')
