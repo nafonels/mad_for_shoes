@@ -4,6 +4,7 @@ from urllib import parse
 
 from instagram.instagram_client import get_instagram_data
 from util.data import extract_field, extract_fields
+from util.logger import logger
 
 
 def get_post_page(shortcode):
@@ -11,7 +12,7 @@ def get_post_page(shortcode):
     field = {
         '__a': 1,
     }
-
+    logger.info(f'get {shortcode} post')
     return get_instagram_data(node_path, shortcode, field)
 
 
@@ -47,7 +48,7 @@ def get_custom_post(post: dict) -> dict:
 
     extract_spec = {
         'post_id':       ('id', str),
-        'post':          ('edge_media_to_caption:node:edges', dict),
+        'post':          ('edge_media_to_caption:edges', dict),
         'like_count':    ('edge_media_preview_like:count', int),
         'post_date':     ('taken_at_timestamp', int),
         'comment_count': ('edge_media_to_comment:count', int),
@@ -56,7 +57,8 @@ def get_custom_post(post: dict) -> dict:
     custom_post = extract_fields(node, extract_spec)
 
     # post 연결
-    custom_post['post'] = '\n---\n'.join(x['node']['text'] for x in custom_post['post'])
+    if isinstance(custom_post['post'], list):
+        custom_post['post'] = '\n---\n'.join(x['node']['text'] for x in custom_post['post'])
     # post에서 hashtag 추출
     custom_post['hash_tag'] = (lambda s: s[s.find('#'):].replace('\n', ''))(custom_post['post'])
     custom_post['url'] = "https://www.instagram.com/p/%s/" % custom_post['post_id']

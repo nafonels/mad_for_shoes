@@ -6,10 +6,12 @@ from datetime import datetime, timedelta
 
 from config import twitter_consumer_key, twitter_consumer_secret, \
     twitter_access_token, twitter_access_secret
+from util.iofunc import save_json
+from util.logger import logger
 from setting import data_path
 from twitter.oauth import oauth2_request
 from twitter.twitter_client import get_twitter_data
-from twitter.util import extract_fields, extract_field, add_list
+from util.data import extract_fields, extract_field, add_list
 
 
 def get_searched_tweet(client, search_query, count = 100, max_id = None):
@@ -38,63 +40,6 @@ def get_rate_limit(client, resources: list):
     }
 
     return get_twitter_data(client, node, field)
-
-
-def get_twitter_twit(tweet: dict, jsonResult):
-    tweet_id = tweet['id']
-    tweet_message = '' if 'text' not in tweet.keys() else tweet['text']
-    screen_name = '' if 'user' not in tweet.keys() else tweet['user']['screen_name']
-
-    tweet_link = []
-    tweet_entities_urls = tweet['entities']['urls']
-    if tweet_entities_urls:
-        for i, val in enumerate(tweet_entities_urls):
-            tweet_link.append(tweet_entities_urls[i]['url'])
-        tweet_link = ' '.join(tweet_link)
-    else:
-        tweet_link = ''
-
-    hashtags = []
-    tweet_entities_hashtags = tweet['entities']['hashtags']
-    if tweet_entities_urls:
-        for i, val in enumerate(tweet_entities_hashtags):
-            hashtags.append(tweet_entities_hashtags[i]['text'])
-        hashtags = ' '.join(hashtags)
-    else:
-        hashtags = ''
-
-    if 'created_at' in tweet.keys():
-        tweet_published = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S +0000 %Y')
-        tweet_published = tweet_published + timedelta(hours = +9)
-        tweet_published = tweet_published.strftime('%Y-%m-%d %H:%M:%S')
-    else:
-        tweet_published = ''
-
-    num_favorite_count = 0 if 'favorite_count' not in tweet.keys() else tweet['favorite_count']
-    num_comments = 0
-    num_shares = 0 if 'retweet_count' not in tweet.keys() else tweet['retweet_count']
-    num_likes = num_favorite_count
-    num_loves = num_wows = num_hahas = num_sads = num_angrys = 0
-
-    jsonResult.append({
-        'post_id':       tweet_id,
-        'message':       tweet_message,
-        'name':          screen_name,
-        'link':          tweet_link,
-        'created_time':  tweet_published,
-        'num_reactions': num_favorite_count,
-        'num_comments':  num_comments,
-        'num_shares':    num_shares,
-        'num_likes':     num_likes,
-        'num_loves':     num_loves,
-        'num_wows':      num_wows,
-        'num_hahas':     num_hahas,
-        'num_sads':      num_sads,
-        'num_angrys':    num_angrys,
-        'hashtags':      hashtags
-    })
-
-    return jsonResult
 
 
 # extract_tweet
@@ -176,7 +121,7 @@ def get_custom_media(tweet: dict) -> dict:
     return rets
 
 
-def main_func(query, num_posts = 100):
+def search_query(query, num_posts = 100, next_id = None):
     client = oauth2_request(twitter_consumer_key, twitter_consumer_secret,
                             twitter_access_token, twitter_access_secret)
 
@@ -184,27 +129,37 @@ def main_func(query, num_posts = 100):
     # print(type(tweets))
     # print(tweets)
 
-    next_id = None
     c = count(1)
+    logger.debug('get api rate limit')
+    limit_result = get_rate_limit(client, ['search'])
+    api_limit = extract_field(limit_result, 'resources:search:/search/tweets', dict)
 
-    print(get_rate_limit(client, ['search']))
+    logger.info('api limit - {remaining}/{limit} (reset to {reset})'.format_map(api_limit))
 
-    json_tweets = []
-    json_comments = []
-    json_media = []
+    is_final = False
 
     while 1:
-        results = get_searched_tweet(client, query, num_posts, next_id)
-        # print(type(results))
-        # print(results)
-        tweets = results['statuses']
-        meta = results['search_metadata']
-
         i = next(c)
-        with open(data_path + 'raw/' + f'temp{i}.json', 'w', encoding = 'utf-8') as ofp:
-            ofp.write(json.dumps(tweets,
-                                 indent = 4))
-        next_id = parse.parse_qs(meta['next_results'][1:])
+
+        json_tweets = []
+        json_comments = []
+        json_media = []
+
+        logger.info(f'get {num_posts} tweets <page {i:04d} - next id : {next_id}> : {query}')
+        results = get_searched_tweet(client, query, num_posts, next_id)
+
+        if not next_id:
+            next_id = 'first'
+        try:
+            tweets = results['statuses']
+            meta = results['search_metadata']
+
+        except Exception:
+            logger.error('cannot crawl tweet data.')
+            logger.critical(f'you can try with next_id : {next_id}')
+            break
+
+        save_json('twit', query, 'list', tweets, next_id, i, True)
 
         for tweet in tweets:
             # get_twitter_twit(tweet, jsonResult)
@@ -212,39 +167,29 @@ def main_func(query, num_posts = 100):
             add_list(json_comments, get_custom_comment(tweet))
             add_list(json_media, get_custom_media(tweet))
 
-        if i > 10:
+        logger.info('save scrap data')
+
+        save_json('twit', query, 'post', json_tweets, next_id, i)
+        save_json('twit', query, 'comment', json_comments, next_id, i)
+        save_json('twit', query, 'media', json_media, next_id, i)
+
+        next_results = meta.get('next_results', None)
+        if next_results:
+            next_id = parse.parse_qs(next_results[1:])['max_id'][0]
+        else:
+            is_final = True
+
+        if is_final:
+            logger.info('final page crawled')
+            next_id = None
             break
 
-    # file_name = f"{query}_twitter"
-    # with open(file_name + '.json', 'w', encoding = 'utf-8') as outfile:
-    #     str_ = json.dumps(jsonResult,
-    #                       indent = 4, sort_keys = True,
-    #                       ensure_ascii = False)
-    #     outfile.write(str_)
+    logger.info('search "{}" SAVED'.format(query))
 
-    file_name = f"{query}_twitter_post"
-    with open(data_path + file_name + '.json', 'w', encoding = 'utf-8') as outfile:
-        str_ = json.dumps(json_tweets,
-                          indent = 2,
-                          ensure_ascii = False)
-        outfile.write(str_)
-
-    file_name = f"{query}_twitter_comment"
-    with open(data_path + file_name + '.json', 'w', encoding = 'utf-8') as outfile:
-        str_ = json.dumps(json_comments,
-                          indent = 2,
-                          ensure_ascii = False)
-        outfile.write(str_)
-
-    file_name = f"{query}_twitter_media"
-    with open(data_path + file_name + '.json', 'w', encoding = 'utf-8') as outfile:
-        str_ = json.dumps(json_media,
-                          indent = 4,
-                          ensure_ascii = False)
-        outfile.write(str_)
-
-    print('{} SAVED'.format(query))
+    if next_id == 'first':
+        next_id = None
+    return next_id
 
 
 if __name__ == '__main__':
-    main_func('신발')
+    search_query('신발')
